@@ -26,7 +26,7 @@ func NewConfig(level string) *zap.Config {
 			Initial:    100,
 			Thereafter: 100,
 		},
-		Encoding: "json",
+		Encoding: "console",
 		EncoderConfig: zapcore.EncoderConfig{
 			LevelKey:       "level",
 			MessageKey:     "msg",
@@ -39,7 +39,7 @@ func NewConfig(level string) *zap.Config {
 		},
 		OutputPaths:       []string{"stdout"},
 		ErrorOutputPaths:  []string{"stderr"},
-		Development:       true,
+		Development:       false,
 		DisableCaller:     false,
 		DisableStacktrace: false,
 	}
