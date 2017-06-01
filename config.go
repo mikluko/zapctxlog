@@ -39,7 +39,7 @@ func NewConfig(level string) *zap.Config {
 		},
 		OutputPaths:       []string{"stdout"},
 		ErrorOutputPaths:  []string{"stderr"},
-		Development:       false,
+		Development:       true,
 		DisableCaller:     false,
 		DisableStacktrace: false,
 	}
