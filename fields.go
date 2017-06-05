@@ -42,3 +42,8 @@ func Bool(k string, v bool) zapcore.Field {
 func Int(k string, v int) zapcore.Field {
 	return zap.Int(k, v)
 }
+
+// Int64 field
+func Int64(k string, v int64) zapcore.Field {
+	return zap.Int64(k, v)
+}
