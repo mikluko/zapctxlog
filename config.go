@@ -19,8 +19,10 @@ func MustLevelFromString(s string) zap.AtomicLevel {
 	return l
 }
 
-func NewConfig(level string) *zap.Config {
-	return &zap.Config{
+type Option func(*zap.Config)
+
+func NewConfig(level string, opts ...Option) *zap.Config {
+	cfg := zap.Config{
 		Level: MustLevelFromString(level),
 		Sampling: &zap.SamplingConfig{
 			Initial:    100,
@@ -37,10 +39,53 @@ func NewConfig(level string) *zap.Config {
 			EncodeDuration: zapcore.StringDurationEncoder,
 			EncodeCaller:   zapcore.ShortCallerEncoder,
 		},
-		OutputPaths:       []string{"stdout"},
-		ErrorOutputPaths:  []string{"stderr"},
+		OutputPaths:       []string{},
+		ErrorOutputPaths:  []string{},
 		Development:       false,
-		DisableCaller:     false,
-		DisableStacktrace: false,
+		DisableCaller:     true,
+		DisableStacktrace: true,
+	}
+	for _, opt := range opts {
+		opt(&cfg)
+	}
+
+	// Set default output and error paths if not set by options
+	if len(cfg.OutputPaths) == 0 {
+		cfg.OutputPaths = []string{"stdout"}
+	}
+	if len(cfg.ErrorOutputPaths) == 0 {
+		cfg.OutputPaths = []string{"stderr"}
+	}
+
+	return &cfg
+}
+
+func OutputPath(s string) Option {
+	return func(cfg *zap.Config) {
+		cfg.OutputPaths = append(cfg.OutputPaths, s)
+	}
+}
+
+func ErrorOutputPath(s string) Option {
+	return func(cfg *zap.Config) {
+		cfg.ErrorOutputPaths = append(cfg.ErrorOutputPaths, s)
+	}
+}
+
+func Development() Option {
+	return func(cfg *zap.Config) {
+		cfg.Development = true
+	}
+}
+
+func EnableCaller() Option {
+	return func(cfg *zap.Config) {
+		cfg.DisableCaller = false
+	}
+}
+
+func EnableStacktrace() Option {
+	return func(cfg *zap.Config) {
+		cfg.DisableStacktrace = false
 	}
 }
