@@ -42,8 +42,8 @@ func With(ctx context.Context, fields ...zapcore.Field) context.Context {
 }
 
 // Logger initializes a logger and pushes it into the context
-func Logger(ctx context.Context, name string, level string) context.Context {
-	logger, err := NewConfig(level).Build(zap.AddCallerSkip(1))
+func Logger(ctx context.Context, name string, opts ...Option) context.Context {
+	logger, err := NewConfig(opts...).Build(zap.AddCallerSkip(1))
 	if err != nil {
 		panic(err)
 	}

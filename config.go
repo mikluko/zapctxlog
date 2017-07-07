@@ -21,9 +21,9 @@ func MustLevelFromString(s string) zap.AtomicLevel {
 
 type Option func(*zap.Config)
 
-func NewConfig(level string, opts ...Option) *zap.Config {
+func NewConfig(opts ...Option) *zap.Config {
 	cfg := zap.Config{
-		Level: MustLevelFromString(level),
+		Level: zap.NewAtomicLevel(),
 		Sampling: &zap.SamplingConfig{
 			Initial:    100,
 			Thereafter: 100,
@@ -58,6 +58,12 @@ func NewConfig(level string, opts ...Option) *zap.Config {
 	}
 
 	return &cfg
+}
+
+func LevelString(s string) Option {
+	return func(cfg *zap.Config) {
+		cfg.Level = MustLevelFromString(s)
+	}
 }
 
 func OutputPath(s string) Option {
